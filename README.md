@@ -18,7 +18,7 @@ to decide who is going to move first.
 
 
 ----
-## usage
+## Usage
 1. The source code is located in the folder named 'sourcecode'. 
 Inside, are the precompiled .class files, as well as the .java files.
 2. Simply perform a 'java Proj3' within the directory and the program should run as expected.
@@ -27,7 +27,7 @@ Inside, are the precompiled .class files, as well as the .java files.
 
 
 ----
-## changelog
+## Changelog
  27-Feb-2018: 
 
 * Initialized git repository
