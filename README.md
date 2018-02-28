@@ -43,7 +43,7 @@ Inside, are the precompiled .class files, as well as the .java files.
 ### Due: 3/06/2018
 
 ----
-## Project Instructions
+## Game(4-in-a-line) - Project Instructions
 see [Project3.pdf](https://github.com/shinha97/fourinaline/blob/master/Project3.pdf)
 
 ### General Overview
