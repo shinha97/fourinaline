@@ -2,7 +2,7 @@ import java.util.*;
 import java.awt.Point;
 
 public class Board{
-    private char [][] board;
+    private static char [][] board;
     private final int winCount = 4;
 
     public Board(){
@@ -139,9 +139,51 @@ public class Board{
 
         if (startPlayer == 0) System.out.print("\nPlayer's move is: ");
         else System.out.print("\nOpponent's move is: ");
+
         String move = input.next().toLowerCase();
+        if (isValidMove(move)){
+            System.out.println("Valid move!");
+        }
+        else System.out.println("Invalid move..");
+
+//        if ((int)move.charAt(0) )
+//            Point inputMove = new Point(move.charAt(0), move.charAt(1));
+    }
+
+
+
+    /**======================
+     *    HELPER FUNCTIONS
+     * ======================*/
+
+    public static boolean isValidMove(String move){
+        System.out.println("Move is: " + (int)move.charAt(0) + " " + move.charAt(1));
+        if ((int)move.charAt(0) > 96) System.out.println("passed1");
+        if ((int)move.charAt(0) < 105) System.out.println("passed2");
+        if (move.charAt(1) > 0) System.out.println("passed3");
+        System.out.println("is " + move.charAt(1) + " less than " + 9 +"?");
+        if (move.charAt(1) > 9) System.out.println("passed 4");
+        if (((int)move.charAt(0) > 96) && ((int)move.charAt(0) < 105) && (move.charAt(1) >= 0) && (move.charAt(1) < 9)){//if the row/col is valid (input: a-h,1-8)
+            System.out.println("The move is " + (move.charAt(0)) + " " + move.charAt(1));
+            //if (move.charAt(1) > 0 && move.charAt(1) < 9){//if the col is valid (input: 1-8)
+                if (board[((int)move.charAt(0)) -97][move.charAt(1)] == '_'){//the move is an empty tile
+                    //DO STUFF
+                    return true;
+                }
+                else{
+                    System.out.println("This is not an empty space. Try again.");
+                    return false;
+                }
+            //}
+            //else{
+        }
+        else{
+            System.out.println("Error: Move out of bounds. Try again. " + (int)move.charAt(0) + " " + move.charAt(1));
+            return false;
+        }
 
     }
+
 
 
 }
