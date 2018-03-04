@@ -25,17 +25,17 @@ public class Board{
         // 	}
         // }
 
-        // //visual test board
-        // board=new char[][]{{'O','O','O','_','O','_','_','_'},
-        // 			 						 {'_','O','O','_','_','_','_','_'},
-        // 								   {'_','_','O','O','_','_','_','_'},
-        // 								   {'_','_','_','O','O','_','_','_'},
-        // 								   {'_','_','_','_','_','_','_','_'},
-        // 									 {'_','_','_','_','_','_','_','_'},
-        // 									 {'_','_','_','_','_','_','_','_'},
-        // 								   {'_','_','_','_','_','_','_','_'}};
+         //visual test board
+         board=new char[][]{{'O','O','O','_','O','_','_','_'},
+                            {'_','O','O','_','_','_','_','_'},
+         					{'_','_','O','O','_','_','_','_'},
+         					{'_','_','_','O','O','_','_','_'},
+         					{'_','_','_','_','_','_','_','_'},
+         					{'_','_','_','_','_','_','_','_'},
+         					{'_','_','_','_','_','_','_','_'},
+         					{'_','_','_','_','_','_','_','_'}};
     }
-    public int evaluate(){
+    public int isTerminal(){
         //check for rows for X or O victory, check 5 positions across 8 columns
         for(int col=0;col<board.length-winCount+1;col++){
             for(int row=0;row<board.length;row++){
@@ -70,37 +70,37 @@ public class Board{
                 }
             }
         }
-        //check diagonals
-        for(int row=0;row<board.length-winCount+1;row++){
-            for(int col=0;col<board.length-winCount+1;col++){
-                //check forward diagonals for X or O victory
-                if(board[row+winCount-1][col]==board[row+winCount-2][col+1] &&
-                        board[row+winCount-2][col+1]==board[row+winCount-3][col+2] &&
-                        board[row+winCount-3][col+2]==board[row+winCount-4][col+3]){
-                    if(board[row+winCount-1][col]=='X'){
-                        // System.out.println("FORWARD DIAGONAL: row "+(char)('@'+row+winCount)+" col "+(col+1));
-                        return 1;
-                    }
-                    if(board[row+winCount-1][col]=='O'){
-                        // System.out.println("FORWARD DIAGONAL: row "+(char)('@'+row+winCount)+" col "+(col+1));
-                        return -1;
-                    }
-                }
-                //check backwards diagonals for X or O victory
-                if(board[row][col+winCount-4]==board[row+1][col+winCount-3] &&
-                        board[row+1][col+winCount-3]==board[row+2][col+winCount-2] &&
-                        board[row+2][col+winCount-2]==board[row+3][col+winCount-1]){
-                    if(board[row][col+winCount-4]=='X'){
-                        // System.out.println("BACKWARD DIAGONAL: row "+(char)('@'+row+1)+" col "+(col+winCount-3));
-                        return 1;
-                    }
-                    if(board[row][col+winCount-4]=='O'){
-                        // System.out.println("BACKWARD DIAGONAL: row "+(char)('@'+row+1)+" col "+(col+winCount-3));
-                        return -1;
-                    }
-                }
-            }
-        }
+//        //check diagonals
+//        for(int row=0;row<board.length-winCount+1;row++){
+//            for(int col=0;col<board.length-winCount+1;col++){
+//                //check forward diagonals for X or O victory
+//                if(board[row+winCount-1][col]==board[row+winCount-2][col+1] &&
+//                        board[row+winCount-2][col+1]==board[row+winCount-3][col+2] &&
+//                        board[row+winCount-3][col+2]==board[row+winCount-4][col+3]){
+//                    if(board[row+winCount-1][col]=='X'){
+//                        // System.out.println("FORWARD DIAGONAL: row "+(char)('@'+row+winCount)+" col "+(col+1));
+//                        return 1;
+//                    }
+//                    if(board[row+winCount-1][col]=='O'){
+//                        // System.out.println("FORWARD DIAGONAL: row "+(char)('@'+row+winCount)+" col "+(col+1));
+//                        return -1;
+//                    }
+//                }
+//                //check backwards diagonals for X or O victory
+//                if(board[row][col+winCount-4]==board[row+1][col+winCount-3] &&
+//                        board[row+1][col+winCount-3]==board[row+2][col+winCount-2] &&
+//                        board[row+2][col+winCount-2]==board[row+3][col+winCount-1]){
+//                    if(board[row][col+winCount-4]=='X'){
+//                        // System.out.println("BACKWARD DIAGONAL: row "+(char)('@'+row+1)+" col "+(col+winCount-3));
+//                        return 1;
+//                    }
+//                    if(board[row][col+winCount-4]=='O'){
+//                        // System.out.println("BACKWARD DIAGONAL: row "+(char)('@'+row+1)+" col "+(col+winCount-3));
+//                        return -1;
+//                    }
+//                }
+//            }
+//        }
         //no victories for X or O
         System.out.println("NO VICTORIES");
         return 0;
@@ -134,7 +134,7 @@ public class Board{
 
 
         Board b = new Board();
-        b.evaluate();
+        b.isTerminal();
         b.printBoard(startPlayer);
 
         if (startPlayer == 0) System.out.print("\nPlayer's move is: ");
@@ -157,16 +157,8 @@ public class Board{
      * ======================*/
 
     public static boolean isValidMove(String move){
-        System.out.println("Move is: " + (int)move.charAt(0) + " " + move.charAt(1));
-        if ((int)move.charAt(0) > 96) System.out.println("passed1");
-        if ((int)move.charAt(0) < 105) System.out.println("passed2");
-        if (move.charAt(1) > 0) System.out.println("passed3");
-        System.out.println("is " + move.charAt(1) + " less than " + 9 +"?");
-        if (move.charAt(1) > 9) System.out.println("passed 4");
-        if (((int)move.charAt(0) > 96) && ((int)move.charAt(0) < 105) && (move.charAt(1) >= 0) && (move.charAt(1) < 9)){//if the row/col is valid (input: a-h,1-8)
-            System.out.println("The move is " + (move.charAt(0)) + " " + move.charAt(1));
-            //if (move.charAt(1) > 0 && move.charAt(1) < 9){//if the col is valid (input: 1-8)
-                if (board[((int)move.charAt(0)) -97][move.charAt(1)] == '_'){//the move is an empty tile
+        if (((int)move.charAt(0) > 96) && ((int)move.charAt(0) < 105) && (move.charAt(1) >= 0) && (move.charAt(1) - '0' < 9)){//if the row/col is valid (input: a-h,1-8)
+                if (board[((int)move.charAt(0)) -97][move.charAt(1) - '0'] == '_'){//the move is an empty ti5le
                     //DO STUFF
                     return true;
                 }
@@ -174,8 +166,6 @@ public class Board{
                     System.out.println("This is not an empty space. Try again.");
                     return false;
                 }
-            //}
-            //else{
         }
         else{
             System.out.println("Error: Move out of bounds. Try again. " + (int)move.charAt(0) + " " + move.charAt(1));

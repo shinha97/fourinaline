@@ -1,16 +1,16 @@
 public class MinMaxNode {
     private int value, alpha, beta;
-    private String type;
+    private boolean maxPlayer;
 
     public MinMaxNode(){
         value = -1;
         alpha = -1;
         beta  = -1;
-        type  = "max";
+        maxPlayer = true;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setMaxPlayer(boolean maxPlayer) {
+        this.maxPlayer = maxPlayer;
     }
 
     public void setAlpha(int alpha) {
@@ -37,14 +37,18 @@ public class MinMaxNode {
         return value;
     }
 
-    public String getType() {
-        return type;
-    }
+    public boolean isMaxPlayer() { return maxPlayer;}
 
     public int maxValue(int[][] state, int plyLevel, int alpha, int beta){
         if (plyLevel == 5) return value;  //terminal stage, base case
-        value = 9999;
+        setValue(9999);
         //TODO: finish implementation
+        if (maxPlayer){
+
+        }
+        if (isMaxPlayer()){
+
+        }
         return -1;
     }
 }
