@@ -119,9 +119,20 @@ public class Board{
                     }
                     else System.out.print((char)('@'+col)+"  ");
                 }
-            }System.out.println();//System.out.println("\n");
+            }System.out.println();
         }
     }
+
+    public int evaluate(){
+        //TODO: Daniel please write a kick-ass eval function here
+        //Given a board, call it's eval function to give a rating on its desirability
+        return -1;
+    }
+
+    public static int getCell(int x, int y) {
+        return board[x][y];
+    }
+
     public static void main(String[] args){
         //=========Set variables Area==========
         Scanner input = new Scanner(System.in);
@@ -145,9 +156,6 @@ public class Board{
             System.out.println("Valid move!");
         }
         else System.out.println("Invalid move..");
-
-//        if ((int)move.charAt(0) )
-//            Point inputMove = new Point(move.charAt(0), move.charAt(1));
     }
 
 
