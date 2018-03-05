@@ -35,6 +35,16 @@ public class Board{
         // 					          {'_','_','_','_','_','_','_','_'},
         // 					          {'_','_','_','_','_','_','_','_'}};
     }
+    public Board(char[][] b){
+      board = new char[8][8];
+
+      //populate empty board
+      for(int i=0;i<board.length;i++){
+          for(int j=0;j<board[i].length;j++){
+              board[i][j] = b[i][j];
+          }
+      }
+    }
     public int isTerminal(){
         //check for rows for X or O victory, check 5 positions across 8 columns
         for(int col=0;col<board.length-winCount+1;col++){
@@ -76,52 +86,55 @@ public class Board{
       return board;
     }
     public int evaluate(char c){
+        char enemy;
+        if(c=='X') enemy = 'O';
+        else enemy = 'X';
         //TODO: Daniel please write a kick-ass eval function here
         //Given a board, call it's eval function to give a rating on its desirability
-        int score = 0;
-        for(int col=0;col<board.length-2;col++){
-            for(int row=0;row<board.length;row++){
-                if(board[row][col]==c){
-                  if(board[row][col]+1<board.length)
-                }
-            }
-        }
 
-        //check for rows for X or O victory, check 5 positions across 8 columns
-        for(int col=0;col<board.length-winCount+1;col++){
-            for(int row=0;row<board.length;row++){
-                if(board[row][col]==board[row][col+1] &&
-                        board[row][col+1]==board[row][col+2] &&
-                        board[row][col+2]==board[row][col+3]){
-                    if(board[row][col]=='X'){
-                        // System.out.println("ROW: row "+(char)('@'+row+1)+" col "+(col+1));
-                        return 1;
-                    }
-                    if(board[row][col]=='O'){
-                        // System.out.println("ROW: row "+(char)('@'+row+1)+" col "+(col+1));
-                        return -1;
-                    }
-                }
-            }
-        }
-        //check columns for X or O victory, check 5 positions across 8 rows
-        for(int row=0;row<board.length-winCount+1;row++){
-            for(int col=0;col<board.length;col++){
-                if(board[row][col]==board[row+1][col] &&
-                        board[row+1][col]==board[row+2][col] &&
-                        board[row+2][col]==board[row+3][col]){
-                    if(board[row][col]=='X'){
-                        // System.out.println("COLUMN: row "+(char)('@'+row+1)+" col "+(col+1));
-                        return 1;
-                    }
-                    if(board[row][col]=='O'){
-                        // System.out.println("COLUMN: row "+(char)('@'+row+1)+" col "+(col+1));
-                        return -1;
-                    }
-                }
-            }
-        }
-        return -1;
+        int fours = checkFours(c);
+        if(fours != 0) return 1000;
+        int enemyFours = checkFours(enemy);
+        if(enemyFours != 0) return -1000;
+        int threes = checkThrees(c);
+        int twos = checkTwos(c);
+        int enemyThrees = checkThrees(enemy);
+        int enemyTwos = checkTwos(enemy);
+
+        return threes + twos - enemyThrees - enemyTwos;
+    }
+    private int checkFours(char c){
+      //check for rows for X or O victory, check 5 positions across 8 columns
+      for(int col=0;col<board.length-winCount+1;col++){
+          for(int row=0;row<board.length;row++){
+              if(board[row][col]==board[row][col+1] &&
+                      board[row][col+1]==board[row][col+2] &&
+                      board[row][col+2]==board[row][col+3]){
+                  if(board[row][col]==c){
+                      // System.out.println("ROW: row "+(char)('@'+row+1)+" col "+(col+1));
+                      return 1;
+                  }
+              }
+          }
+      }
+      //check columns for X or O victory, check 5 positions across 8 rows
+      for(int row=0;row<board.length-winCount+1;row++){
+          for(int col=0;col<board.length;col++){
+              if(board[row][col]==board[row+1][col] &&
+                      board[row+1][col]==board[row+2][col] &&
+                      board[row+2][col]==board[row+3][col]){
+                  if(board[row][col]=='X'){
+                      // System.out.println("COLUMN: row "+(char)('@'+row+1)+" col "+(col+1));
+                      return 1;
+                  }
+                  if(board[row][col]=='O'){
+                      // System.out.println("COLUMN: row "+(char)('@'+row+1)+" col "+(col+1));
+                      return -1;
+                  }
+              }
+          }
+      }
+      return -1;
     }
 
     public static int getCell(int x, int y) {
