@@ -26,14 +26,14 @@ public class Board{
         // }
 
          //visual test board
-         board=new char[][]{{'O','O','O','_','O','_','_','_'},
-                            {'_','O','O','_','_','_','_','_'},
-         					{'_','_','O','O','_','_','_','_'},
-         					{'_','_','_','O','O','_','_','_'},
-         					{'_','_','_','_','_','_','_','_'},
-         					{'_','_','_','_','_','_','_','_'},
-         					{'_','_','_','_','_','_','_','_'},
-         					{'_','_','_','_','_','_','_','_'}};
+         // board=new char[][]{{'O','O','O','_','O','_','_','_'},
+         //                    {'_','O','O','_','_','_','_','_'},
+         // 					          {'_','_','O','O','_','_','_','_'},
+         // 					          {'_','_','_','O','_','_','_','_'},
+         // 					          {'_','_','_','_','_','_','_','_'},
+         // 					          {'_','_','_','_','_','_','_','_'},
+         // 					          {'_','_','_','_','_','_','_','_'},
+         // 					          {'_','_','_','_','_','_','_','_'}};
     }
     public int isTerminal(){
         //check for rows for X or O victory, check 5 positions across 8 columns
@@ -132,29 +132,4 @@ public class Board{
     public static int getCell(int x, int y) {
         return board[x][y];
     }
-
-    /**======================
-     *    HELPER FUNCTIONS
-     * ======================*/
-
-    public static boolean isValidMove(String move){
-        if (((int)move.charAt(0) > 96) && ((int)move.charAt(0) < 105) && (move.charAt(1) >= 0) && (move.charAt(1) - '0' < 9)){//if the row/col is valid (input: a-h,1-8)
-                if (board[((int)move.charAt(0)) -97][move.charAt(1) - '0'] == '_'){//the move is an empty ti5le
-                    //DO STUFF
-                    return true;
-                }
-                else{
-                    System.out.println("This is not an empty space. Try again.");
-                    return false;
-                }
-        }
-        else{
-            System.out.println("Error: Move out of bounds. Try again. " + (int)move.charAt(0) + " " + move.charAt(1));
-            return false;
-        }
-
-    }
-
-
-
 }
