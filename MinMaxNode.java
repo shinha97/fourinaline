@@ -68,6 +68,7 @@ public class MinMaxNode {
     public boolean isMaxPlayer() { return maxPlayer;}
 
     public int maxValue(Board state, int plyLevel, int alpha, int beta){
+        //TODO: redefine stop case to: "time run out && depth >= 5"
         if (plyLevel == 5) return state.evaluate('X');  //base case, leaf node has been reached.
         value = -9999;
 
@@ -78,8 +79,7 @@ public class MinMaxNode {
                     MinMaxNode min = new MinMaxNode(value, alpha, beta, currPosition, false, newState);
                     //creates proper new min node
                     //TODO: Use this min node for new state, maaybe redefine recursive calls?
-
-                    int newValue = minValue(state, plyLevel+1, alpha, beta);
+                    int newValue = min.minValue(state, plyLevel+1, alpha, beta);
                     if (newValue > value) value = newValue;
                     if (newValue >= beta) return value;
                     if (newValue > alpha) alpha = newValue;
@@ -97,8 +97,10 @@ public class MinMaxNode {
         for (int i = getLeftBound(currPosition.x); i < getRightBound(currPosition.x);i++){
             for (int j = getLeftBound(currPosition.y); j < getRightBound(currPosition.y);j++){
                 if (isEmpty(currPosition)){
-                    state.updateBoard(currPosition, 'O');
-                    int newValue = maxValue(state, plyLevel+1, alpha, beta);
+                    Board newState = new Board(state.updateBoard(currPosition, 'O'));
+                    MinMaxNode max = new MinMaxNode(value, alpha, beta, currPosition, true, newState);
+
+                    int newValue = max.maxValue(state, plyLevel+1, alpha, beta);
                     if (newValue < value) value = newValue;
                     if (newValue <= alpha) return value;
                     if (newValue < beta) beta = newValue;
