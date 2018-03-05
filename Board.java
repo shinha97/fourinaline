@@ -3,7 +3,7 @@ import java.awt.Point;
 
 public class Board{
     private static char [][] board;
-    private char terminalState;
+    private boolean terminalState;
 
     //testing
     // public static void main(String[]args){
@@ -52,11 +52,10 @@ public class Board{
                   board[i][j] = b[i][j];
               }
         }
-        if(checkFours('X')) terminalState = 'X';
-        else if(checkFours('O')) terminalState = 'O';
-        else terminalState = '_';
+        if(checkFours('X') || checkFours('O'))
+            terminalState = true;
     }
-    public char getTerminalState(){
+    public boolean getTerminalState(){
         return terminalState;
     }
     public char[][] getBoard(){
