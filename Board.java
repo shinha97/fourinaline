@@ -197,7 +197,7 @@ public class Board{
         return false;
     }
 
-    public static int getCell(int x, int y) {
+    public static char getCell(int x, int y) {
         return board[x][y];
     }
 
