@@ -208,6 +208,26 @@ public class Board{
         return board;
     }
 
+    public boolean tryMove(String move, char c){
+        if (((int)move.charAt(0) > 96) && ((int)move.charAt(0) < 105) && (move.charAt(1) >= 0) && (move.charAt(1) - '0' < 9)){//if the row/col is valid (input: a-h,1-8)
+            if (getCell(((int)move.charAt(0)) -97,move.charAt(1) - '0' -1) == '_'){//the move is an empty tile
+                //If valid move, update the board
+                Point validMove = new Point(((int)move.charAt(0)-97),(move.charAt(1)-'0'-1));
+                updateBoard(validMove, c);
+                return true;
+            }
+            else{
+                System.out.println("This is not an empty space. Try again.");
+                return false;
+            }
+        }
+        else{
+            System.out.println("Error: Move out of bounds. Try again. " + (int)move.charAt(0) + " " + move.charAt(1));
+            return false;
+        }
+
+    }
+
     public void printBoard(int startPlayer){
         for(int col=0;col<9;col++){//column
             for(int row=0;row<9;row++){//row
