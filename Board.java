@@ -58,9 +58,6 @@ public class Board{
     public boolean getTerminalState(){
         return terminalState;
     }
-    public char[][] getBoard(){
-        return board;
-    }
     public int evaluate(char c){
         //TODO: Daniel please write a kick-ass eval function here
         //Given a board, call it's eval function to give a rating on its desirability
