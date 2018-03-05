@@ -14,14 +14,14 @@ public class Board{
 
     public Board(){
         board = new char[8][8];
-        terminalState = '_';
+        terminalState = false;
 
         //populate empty board
-        // for(int i=0;i<board.length;i++){
-        //     for(int j=0;j<board[i].length;j++){
-        //         board[i][j] = '_';
-        //     }
-        // }
+         for(int i=0;i<board.length;i++){
+             for(int j=0;j<board[i].length;j++){
+                 board[i][j] = '_';
+             }
+         }
 
         //test generate random boards
         // Random r = new Random();
@@ -61,7 +61,9 @@ public class Board{
     public int evaluate(char c){
         //TODO: Daniel please write a kick-ass eval function here
         //Given a board, call it's eval function to give a rating on its desirability
-
+        //TEMP//
+        char enemy  = c;
+        //TEMP//
         boolean fours = checkFours(c);
         if(fours) return 10000000;
         boolean enemyFours = checkFours(enemy);
