@@ -52,12 +52,9 @@ public class Board{
         }
     }
     public char[][] getBoard(){
-      return board;
+        return board;
     }
     public int evaluate(char c){
-        char enemy;
-        if(c=='X') enemy = 'O';
-        else enemy = 'X';
         //TODO: Daniel please write a kick-ass eval function here
         //Given a board, call it's eval function to give a rating on its desirability
 
@@ -199,6 +196,12 @@ public class Board{
     public static int getCell(int x, int y) {
         return board[x][y];
     }
+
+    public char[][] updateBoard(Point newPosition, char value){
+        board[newPosition.x][newPosition.y] = value;
+        return board;
+    }
+
     public void printBoard(int startPlayer){
         for(int col=0;col<9;col++){//column
             for(int row=0;row<9;row++){//row
@@ -216,4 +219,6 @@ public class Board{
             }System.out.println();
         }
     }
+
+
 }
