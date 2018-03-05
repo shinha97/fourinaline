@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Main{
   public static void main(String[] args){
       //=========Set variables Area==========
@@ -18,7 +20,7 @@ public class Main{
       else System.out.print("\nOpponent's move is: ");
 
       String move = input.next().toLowerCase();
-      if (isValidMove(move)){
+      if (Board.isValidMove(move)){
           System.out.println("Valid move!");
       }
       else System.out.println("Invalid move..");
