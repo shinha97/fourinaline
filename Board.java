@@ -15,7 +15,7 @@ public class Board{
             }
         }
 
-        // // test generate random boards
+        // test generate random boards
         // Random r = new Random();
         // for(int i=0;i<8;i++){
         // 	for(int j=0;j<8;j++){
@@ -25,15 +25,15 @@ public class Board{
         // 	}
         // }
 
-         //visual test board
-         // board=new char[][]{{'O','O','O','_','O','_','_','_'},
-         //                    {'_','O','O','_','_','_','_','_'},
-         // 					          {'_','_','O','O','_','_','_','_'},
-         // 					          {'_','_','_','O','_','_','_','_'},
-         // 					          {'_','_','_','_','_','_','_','_'},
-         // 					          {'_','_','_','_','_','_','_','_'},
-         // 					          {'_','_','_','_','_','_','_','_'},
-         // 					          {'_','_','_','_','_','_','_','_'}};
+        //visual test board
+        // board=new char[][]{{'O','O','O','_','O','_','_','_'},
+        //                    {'_','O','O','_','_','_','_','_'},
+        // 					          {'_','_','O','O','_','_','_','_'},
+        // 					          {'_','_','_','O','_','_','_','_'},
+        // 					          {'_','_','_','_','_','_','_','_'},
+        // 					          {'_','_','_','_','_','_','_','_'},
+        // 					          {'_','_','_','_','_','_','_','_'},
+        // 					          {'_','_','_','_','_','_','_','_'}};
     }
     public int isTerminal(){
         //check for rows for X or O victory, check 5 positions across 8 columns
@@ -70,40 +70,62 @@ public class Board{
                 }
             }
         }
-//        //check diagonals
-//        for(int row=0;row<board.length-winCount+1;row++){
-//            for(int col=0;col<board.length-winCount+1;col++){
-//                //check forward diagonals for X or O victory
-//                if(board[row+winCount-1][col]==board[row+winCount-2][col+1] &&
-//                        board[row+winCount-2][col+1]==board[row+winCount-3][col+2] &&
-//                        board[row+winCount-3][col+2]==board[row+winCount-4][col+3]){
-//                    if(board[row+winCount-1][col]=='X'){
-//                        // System.out.println("FORWARD DIAGONAL: row "+(char)('@'+row+winCount)+" col "+(col+1));
-//                        return 1;
-//                    }
-//                    if(board[row+winCount-1][col]=='O'){
-//                        // System.out.println("FORWARD DIAGONAL: row "+(char)('@'+row+winCount)+" col "+(col+1));
-//                        return -1;
-//                    }
-//                }
-//                //check backwards diagonals for X or O victory
-//                if(board[row][col+winCount-4]==board[row+1][col+winCount-3] &&
-//                        board[row+1][col+winCount-3]==board[row+2][col+winCount-2] &&
-//                        board[row+2][col+winCount-2]==board[row+3][col+winCount-1]){
-//                    if(board[row][col+winCount-4]=='X'){
-//                        // System.out.println("BACKWARD DIAGONAL: row "+(char)('@'+row+1)+" col "+(col+winCount-3));
-//                        return 1;
-//                    }
-//                    if(board[row][col+winCount-4]=='O'){
-//                        // System.out.println("BACKWARD DIAGONAL: row "+(char)('@'+row+1)+" col "+(col+winCount-3));
-//                        return -1;
-//                    }
-//                }
-//            }
-//        }
-        //no victories for X or O
-        System.out.println("NO VICTORIES");
         return 0;
+    }
+    public char[][] getBoard(){
+      return board;
+    }
+    public int evaluate(char c){
+        //TODO: Daniel please write a kick-ass eval function here
+        //Given a board, call it's eval function to give a rating on its desirability
+        int score = 0;
+        for(int col=0;col<board.length-2;col++){
+            for(int row=0;row<board.length;row++){
+                if(board[row][col]==c){
+                  if(board[row][col]+1<board.length)
+                }
+            }
+        }
+
+        //check for rows for X or O victory, check 5 positions across 8 columns
+        for(int col=0;col<board.length-winCount+1;col++){
+            for(int row=0;row<board.length;row++){
+                if(board[row][col]==board[row][col+1] &&
+                        board[row][col+1]==board[row][col+2] &&
+                        board[row][col+2]==board[row][col+3]){
+                    if(board[row][col]=='X'){
+                        // System.out.println("ROW: row "+(char)('@'+row+1)+" col "+(col+1));
+                        return 1;
+                    }
+                    if(board[row][col]=='O'){
+                        // System.out.println("ROW: row "+(char)('@'+row+1)+" col "+(col+1));
+                        return -1;
+                    }
+                }
+            }
+        }
+        //check columns for X or O victory, check 5 positions across 8 rows
+        for(int row=0;row<board.length-winCount+1;row++){
+            for(int col=0;col<board.length;col++){
+                if(board[row][col]==board[row+1][col] &&
+                        board[row+1][col]==board[row+2][col] &&
+                        board[row+2][col]==board[row+3][col]){
+                    if(board[row][col]=='X'){
+                        // System.out.println("COLUMN: row "+(char)('@'+row+1)+" col "+(col+1));
+                        return 1;
+                    }
+                    if(board[row][col]=='O'){
+                        // System.out.println("COLUMN: row "+(char)('@'+row+1)+" col "+(col+1));
+                        return -1;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static int getCell(int x, int y) {
+        return board[x][y];
     }
     public void printBoard(int startPlayer){
         for(int col=0;col<9;col++){//column
@@ -121,15 +143,5 @@ public class Board{
                 }
             }System.out.println();
         }
-    }
-
-    public int evaluate(){
-        //TODO: Daniel please write a kick-ass eval function here
-        //Given a board, call it's eval function to give a rating on its desirability
-        return -1;
-    }
-
-    public static int getCell(int x, int y) {
-        return board[x][y];
     }
 }
