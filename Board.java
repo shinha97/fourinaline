@@ -3,6 +3,7 @@ import java.awt.Point;
 
 public class Board{
     private static char [][] board;
+    private char terminalState;
 
     //testing
     // public static void main(String[]args){
@@ -13,6 +14,7 @@ public class Board{
 
     public Board(){
         board = new char[8][8];
+        terminalState = '_';
 
         //populate empty board
         // for(int i=0;i<board.length;i++){
@@ -34,12 +36,12 @@ public class Board{
         //visual test board
         // board=new char[][]{ {'O','O','O','X','_','X','_','X'},
         //                     {'_','_','_','_','_','_','_','_'},
-        // 					          {'_','_','_','_','_','_','_','_'},
-        // 					          {'_','_','_','_','_','_','_','_'},
-        // 					          {'_','_','_','_','_','_','_','_'},
-        // 					          {'_','_','_','_','_','_','_','_'},
-        // 					          {'_','_','_','_','_','_','_','_'},
-        // 					          {'_','_','_','_','_','_','_','_'}};
+        // 					   {'_','_','_','_','_','_','_','_'},
+        // 					   {'_','_','_','_','_','_','_','_'},
+        // 					   {'_','_','_','_','_','_','_','_'},
+        // 					   {'_','_','_','_','_','_','_','_'},
+        // 					   {'_','_','_','_','_','_','_','_'},
+        // 					   {'_','_','_','_','_','_','_','_'}};
     }
     public Board(char[][] b){
         board = new char[8][8];
@@ -50,6 +52,12 @@ public class Board{
                   board[i][j] = b[i][j];
               }
         }
+        if(checkFours('X')) terminalState = 'X';
+        else if(checkFours('O')) terminalState = 'O';
+        else terminalState = '_';
+    }
+    public char getTerminalState(){
+        return terminalState;
     }
     public char[][] getBoard(){
         return board;
