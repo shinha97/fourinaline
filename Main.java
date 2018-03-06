@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main{
@@ -20,6 +22,7 @@ public class Main{
      * ======================*/
 
     public static void runGame(int startPlayer){
+        List<String> moveRecord = new ArrayList<String>();
         Scanner input = new Scanner(System.in);
         Board b = new Board();
         b.printBoard(startPlayer);
@@ -39,7 +42,9 @@ public class Main{
 
             String move = input.next().toLowerCase();
             if (b.tryMove(move, c)){
-                b.printBoard(startPlayer);
+                //record move
+                moveRecord.add(move);
+                b.printBoard(startPlayer,moveRecord);
                 //TODO: Find response move, within the given time and plot on the board
                 //System.out.println("Valid move!");
                 if (startPlayer == 0){

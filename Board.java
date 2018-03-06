@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.awt.Point;
 
 public class Board{
@@ -228,23 +230,33 @@ public class Board{
 
     }
 
-    public void printBoard(int startPlayer){
-        for(int col=0;col<9;col++){//column
-            for(int row=0;row<9;row++){//row
-                if(col-1 >= 0 && row-1 >= 0)
-                    System.out.print(board[col-1][row-1]+"  ");
-                else{
-                    if(col==0 && row==0) System.out.print("   ");
-                    else if(col==0){
-                        System.out.print(row+"  ");
-                        if (row == 8 && (startPlayer == 0)) System.out.print("\t\tPlayer vs. Opponent");
-                        else if (row == 8) System.out.print("\t\tOpponent vs. Player");
-                    }
-                    else System.out.print((char)('@'+col)+"  ");
+    public void printBoard(int startPlayer,List<String> moveRecord){
+        for(int row=0;row<9;row++){//rowumn
+            for(int col=0;col<9;col++){//col
+                if(row-1 >= 0 && col-1 >= 0)//if not (1st column and 1st row), print board cells
+                    System.out.print(board[row-1][col-1]+"  ");
+                else{//1st row or 1st col
+                    if(row==0 && col==0){//cell[0][0]
+                        System.out.print("   ");
+                    }else if(row==0){
+                        System.out.print(col+"  ");
+                    }else if(col==0){
+                        System.out.print((char)('@'+row)+"  ");
+                    }else;
                 }
             }System.out.println();
+        }System.out.println();
+        if(startPlayer==0){
+            System.out.println("Player vs Opponent");
+        }else{
+            System.out.println("Opponent vs Player");
+        }
+        for(int i=0;i<moveRecord.size();i++){
+          if(i%2==0){
+            if(i!=0) System.out.println();
+            System.out.print(((i/2)+1)+". ");
+          }
+          System.out.print(moveRecord.get(i)+" ");
         }
     }
-
-
 }
