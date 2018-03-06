@@ -43,7 +43,6 @@ public class Main{
 
             String move = input.next().toLowerCase();
             if (b.tryMove(move, c)){
-                //Point validMove = new Point(move.charAt(0),move.charAt(1));
                 b.printBoard(startPlayer);
                 //TODO: Find response move, within the given time and plot on the board
                 //System.out.println("Valid move!");
@@ -61,6 +60,9 @@ public class Main{
 
             }
         }
+
+        if (startPlayer == 1) System.out.println("Player Wins!");
+        else System.out.println("Opponent Wins!");
 
     }
 
