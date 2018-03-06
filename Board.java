@@ -61,9 +61,10 @@ public class Board{
     public int evaluate(char c){
         //TODO: Daniel please write a kick-ass eval function here
         //Given a board, call it's eval function to give a rating on its desirability
+        boolean enemy;
         if(c=='X') enemy  = 'O';
         else enemy = 'X';
-        
+
         boolean fours = checkFours(c);
         if(fours) return 10000000;
         boolean enemyFours = checkFours(enemy);

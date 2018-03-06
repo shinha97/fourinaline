@@ -23,7 +23,7 @@ public class MinMaxNode {
         //set board, given a new board state
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
-                state.updateBoard(new Point(i,j), nstate.getCell(i,j);
+                state.updateBoard(new Point(i,j), nstate.getCell(i,j));
             }
 
         }
