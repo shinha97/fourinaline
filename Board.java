@@ -238,22 +238,27 @@ public class Board{
                 else{//1st row or 1st col
                     if(row==0 && col==0){//cell[0][0]
                         System.out.print("   ");
-                    }else if(row==0){
+                    }else if(row==0){//first row, prints numbers
                         System.out.print(col+"  ");
-                    }else if(col==0){
+                    }else if(col==0){//first column prints letters
                         System.out.print((char)('@'+row)+"  ");
                     }else;
                 }
             }System.out.println();
         }System.out.println();
+
+        //print record of moves
         if(startPlayer==0){
             System.out.println("Player vs Opponent");
         }else{
             System.out.println("Opponent vs Player");
         }
         for(int i=0;i<moveRecord.size();i++){
+          //round of turns from both players
           if(i%2==0){
+            //print new line after every 2 moves
             if(i!=0) System.out.println();
+            //print round number
             System.out.print(((i/2)+1)+". ");
           }
           System.out.print(moveRecord.get(i)+" ");
