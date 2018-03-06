@@ -13,10 +13,6 @@ public class Main{
         //========End set variables Area==========
 
         runGame(startPlayer);
-
-
-
-
     }
 
     /**======================
@@ -63,25 +59,6 @@ public class Main{
 
         if (startPlayer == 1) System.out.println("Player Wins!");
         else System.out.println("Opponent Wins!");
-
-    }
-
-
-    public static boolean isValidMove(Board b,String move){
-        if (((int)move.charAt(0) > 96) && ((int)move.charAt(0) < 105) && (move.charAt(1) >= 0) && (move.charAt(1) - '0' < 9)){//if the row/col is valid (input: a-h,1-8)
-            if (b.getCell(((int)move.charAt(0)) -97,move.charAt(1) - '0' -1) == '_'){//the move is an empty tile
-                //DO STUFF
-                return true;
-            }
-            else{
-                System.out.println("This is not an empty space. Try again.");
-                return false;
-            }
-        }
-        else{
-            System.out.println("Error: Move out of bounds. Try again. " + (int)move.charAt(0) + " " + move.charAt(1));
-            return false;
-        }
 
     }
 }
