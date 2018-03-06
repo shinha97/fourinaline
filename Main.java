@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.Scanner;
 
 public class Main{
@@ -11,28 +12,62 @@ public class Main{
         int startPlayer = input.nextInt();
         //========End set variables Area==========
 
+        runGame(startPlayer);
 
-        Board b = new Board();
-        b.isTerminal();
-        b.printBoard(startPlayer);
 
-        if (startPlayer == 0) System.out.print("\nPlayer's move is: ");
-        else System.out.print("\nOpponent's move is: ");
 
-        String move = input.next().toLowerCase();
-        if (isValidMove(b,move)){
-            System.out.println("Valid move!");
-        }
-        else System.out.println("Invalid move..");
+
     }
 
     /**======================
      *    HELPER FUNCTIONS
      * ======================*/
 
+    public static void runGame(int startPlayer){
+        Scanner input = new Scanner(System.in);
+        Board b = new Board();
+        b.printBoard(startPlayer);
+
+
+        while(!b.getTerminalState()){
+            char c;
+            if (startPlayer == 0){
+                System.out.print("\nPlayer's move is: ");
+                c = 'X';
+            }
+            else {
+                System.out.print("\nOpponent's move is: ");
+                c = 'O';
+            }
+
+
+            String move = input.next().toLowerCase();
+            if (b.tryMove(move, c)){
+                //Point validMove = new Point(move.charAt(0),move.charAt(1));
+                b.printBoard(startPlayer);
+                //TODO: Find response move, within the given time and plot on the board
+                //System.out.println("Valid move!");
+                if (startPlayer == 0){
+                    startPlayer =1;
+                    c = 'X';
+                }
+                else {
+                    startPlayer = 0;
+                    c = 'O';
+                }
+            }
+            else{
+                System.out.println("Invalid move has been entered. Re-enter a valid move");
+
+            }
+        }
+
+    }
+
+
     public static boolean isValidMove(Board b,String move){
         if (((int)move.charAt(0) > 96) && ((int)move.charAt(0) < 105) && (move.charAt(1) >= 0) && (move.charAt(1) - '0' < 9)){//if the row/col is valid (input: a-h,1-8)
-            if (b.getCell(((int)move.charAt(0)) -97,move.charAt(1) - '0' -1) == '_'){//the move is an empty ti5le
+            if (b.getCell(((int)move.charAt(0)) -97,move.charAt(1) - '0' -1) == '_'){//the move is an empty tile
                 //DO STUFF
                 return true;
             }
