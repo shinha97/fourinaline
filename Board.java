@@ -3,7 +3,6 @@ import java.awt.Point;
 
 public class Board{
     private static char [][] board;
-    private boolean terminalState;
 
     //testing
     // public static void main(String[]args){
@@ -14,7 +13,6 @@ public class Board{
 
     public Board(){
         board = new char[8][8];
-        terminalState = false;
 
         //populate empty board
          for(int i=0;i<board.length;i++){
@@ -52,11 +50,12 @@ public class Board{
                   board[i][j] = b[i][j];
               }
         }
-        if(checkFours('X') || checkFours('O'))
-            terminalState = true;
     }
     public boolean getTerminalState(){
-        return terminalState;
+        if(checkFours('X') || checkFours('O'))
+            return true;
+        else
+            return false;
     }
     public int evaluate(char c){
         //TODO: Daniel please write a kick-ass eval function here
@@ -237,7 +236,7 @@ public class Board{
                 else{
                     if(col==0 && row==0) System.out.print("   ");
                     else if(col==0){
-                        System.out.print((row)+"  ");
+                        System.out.print(row+"  ");
                         if (row == 8 && (startPlayer == 0)) System.out.print("\t\tPlayer vs. Opponent");
                         else if (row == 8) System.out.print("\t\tOpponent vs. Player");
                     }
