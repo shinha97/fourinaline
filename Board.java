@@ -5,6 +5,8 @@ import java.awt.Point;
 
 public class Board{
     private static char [][] board;
+    private int movesLeft;
+    private Point lastMove;
 
     //testing
     // public static void main(String[]args){
@@ -15,6 +17,7 @@ public class Board{
 
     public Board(){
         board = new char[8][8];
+        movesLeft = 64;
 
         //populate empty board
          for(int i=0;i<board.length;i++){
@@ -43,18 +46,38 @@ public class Board{
         // 					   {'_','_','_','_','_','_','_','_'},
         // 					   {'_','_','_','_','_','_','_','_'}};
     }
-    public Board(char[][] b){
+    // public Board(char[][] b){
+    // public Board(Board copy){
+    //     board = new char[8][8];
+    //
+    //     //populate empty board
+    //     for(int i=0;i<board.length;i++){
+    //           for(int j=0;j<board[i].length;j++){
+    //               board[i][j] = copy[i][j];
+    //           }
+    //     }
+    //     movesLeft = copy.getMovesLeft();
+    // }
+    // copy constructor
+    Board(Board copy) {
         board = new char[8][8];
 
         //populate empty board
         for(int i=0;i<board.length;i++){
               for(int j=0;j<board[i].length;j++){
-                  board[i][j] = b[i][j];
+                  board[i][j] = copy.getCell(i,j);
               }
         }
+        movesLeft = copy.getMovesLeft();
+    }
+    public int getMovesLeft(){
+      return movesLeft;
+    }
+    public Point getLastMove(){
+      return lastMove;
     }
     public boolean getTerminalState(){
-        if(checkFours('X') || checkFours('O'))
+        if(checkFours('X') || checkFours('O') || movesLeft == 0)
             return true;
         else
             return false;
@@ -201,13 +224,12 @@ public class Board{
         return false;
     }
 
-    public static char getCell(int x, int y) {
+    public char getCell(int x, int y) {
         return board[x][y];
     }
 
-    public char[][] updateBoard(Point newPosition, char value){
+    public void updateBoard(Point newPosition, char value){
         board[newPosition.x][newPosition.y] = value;
-        return board;
     }
 
     public boolean tryMove(String move, char c){

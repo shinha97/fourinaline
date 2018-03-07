@@ -14,63 +14,77 @@ public class Main{
         int startPlayer = input.nextInt();
         //========End set variables Area==========
 
-        runGame(startPlayer);
+        runGame(startPlayer,time);
     }
 
     /**======================
      *    HELPER FUNCTIONS
      * ======================*/
 
-    public static void runGame(int startPlayer){
+    public static void runGame(int startPlayer,int time){
         List<String> moveRecord = new ArrayList<String>();
         Scanner input = new Scanner(System.in);
         Board b = new Board();
+        String move;
+        long startTime = System.currentTimeMillis(),timeLimit = time*1000;
         b.printBoard(startPlayer, moveRecord);
-
-
         while(!b.getTerminalState()){
             char c;
             if (startPlayer == 0){
                 System.out.print("\nPlayer's move is: ");
                 c = 'X';
-            }
-            else {
-                System.out.print("\nOpponent's move is: ");
-                c = 'O';
-            }
 
+                iterative deepening minimax
+                Board tempBoard;
+                for(int maxDepth=0;maxDepth<=5 && (System.currentTimeMillis()-startTime)<timeLimit;maxDepth++){
+                    startTime = System.nanoTime();
 
-            String move = input.next().toLowerCase();
-            if (b.tryMove(move, c)){
-                //record move
-                moveRecord.add(move);
-                b.printBoard(startPlayer,moveRecord);
-                //TODO: Find response move, within the given time and plot on the board
-                Point validMove = new Point(((int)move.charAt(0)-97),(move.charAt(1)-'0'-1));
-                if (startPlayer == 0){
-                    MinMaxNode AI       = new MinMaxNode(-9999,9999,validMove,true,b);
-                    MinMaxNode nextMove = AI.minValue(b, 0, -9999,9999);
-                    //MinMaxNode nextMove = MinMaxNode.minimax(0,true,-9999,9999,AI);
-                    System.out.println("Opponent will move to pos: " + nextMove.getCurrPosition());
+                    //call minimax
+                    tempBoard = minimax(b,0,true,-999999999,999999999,maxDepth);
 
+                    totalTime = System.currentTimeMillis()-startTime;
                 }
-                else{
-                    MinMaxNode AI = new MinMaxNode(-9999,9999,validMove,false,b);
-                }
+                moveRecord.add(Character.toString((char)(tempBoard.getLastMove().x+97))+
+                                              Integer.toString(tempBoard.getLastMove().y+1));
+                b = tempBoard;
 
-
-                if (startPlayer == 0){
-                    startPlayer =1;
-                    c = 'X';
-                }
-                else {
-                    startPlayer = 0;
+                // //test ai player with keyboard
+                // do{
+                //     System.out.print("\nPlayer's move is: ");
+                //     c = 'O';
+                //     move = input.next().toLowerCase();
+                //
+                //     if (b.tryMove(move, c)){
+                //         //record move
+                //         moveRecord.add(move);
+                //         b.printBoard(startPlayer,moveRecord);
+                //         Point validMove = new Point(((int)move.charAt(0)-97),(move.charAt(1)-'0'-1));
+                //         break;
+                //     }
+                // }while(true);
+            }else {
+                do{
+                    System.out.print("\nOpponent's move is: ");
                     c = 'O';
-                }
-            }
-            else{
-                System.out.println("Invalid move has been entered. Re-enter a valid move");
+                    move = input.next().toLowerCase();
 
+                    if (b.tryMove(move, c)){
+                        //record move
+                        moveRecord.add(move);
+                        b.printBoard(startPlayer,moveRecord);
+                        Point validMove = new Point(((int)move.charAt(0)-97),(move.charAt(1)-'0'-1));
+                        break;
+                    }
+                }while(true);
+            }
+
+            //swap turns
+            if (startPlayer == 0){
+                startPlayer =1;
+                c = 'X';
+            }else {
+                startPlayer = 0;
+                c = 'O';
             }
         }
 
