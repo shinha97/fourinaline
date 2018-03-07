@@ -36,18 +36,18 @@ public class Main{
             if (currentPlayer == 0){
                 System.out.print("\nPlayer's move is: ");
                 c = 'X';
-                Board tempBoard = new Board();
-                for(int maxDepth=1;maxDepth<=1 && (System.currentTimeMillis()-startTime)<timeLimit;maxDepth++){
+                Board tempBoard = new Board(), currentBoard = new Board();
+                for(int maxDepth=1;maxDepth<=2 && (System.currentTimeMillis()-startTime)<timeLimit;maxDepth++){
                     startTime = System.nanoTime();
                     //call minimax
-                    tempBoard.copy(minimax(b,0,true,-999999999,999999999,maxDepth));
-
+                    tempBoard = minimax(b,0,true,-999999999,999999999,maxDepth);
+                    currentBoard.copy(tempBoard);
                     totalTime = System.currentTimeMillis()-startTime;
                 }
-                System.out.println(tempBoard.getLastMove().x+" "+tempBoard.getLastMove().y);
-                moveRecord.add(Character.toString((char)(tempBoard.getLastMove().x+97))+
-                                              Integer.toString(tempBoard.getLastMove().y+1));
-                b.copy(tempBoard);
+                System.out.println(currentBoard.getLastMove().x+" "+currentBoard.getLastMove().y);
+                moveRecord.add(Character.toString((char)(currentBoard.getLastMove().x+97))+
+                                    Character.toString((char)(currentBoard.getLastMove().x+97)));
+                b.copy(currentBoard);
                 b.printBoard(startPlayer,moveRecord);
                 //test ai player with keyboard
                 // do{
@@ -101,7 +101,7 @@ public class Main{
 
         Point childMove = new Point();
         if (isMaxPlayer){
-
+            System.out.println("X");
             int bestValue = -999999999, value;
             Board returnBoard = new Board(), bestState = new Board();
             boolean getOut = false;
@@ -109,13 +109,14 @@ public class Main{
             for (int i = 0; i < 8; i++){
                 for (int j = 0; j < 8; j++){
                     if (state.getCell(i,j) == '_'){//if the potential child is an empty tile..
+                        System.out.println(i+" "+j);
                         // System.out.println("X turn");
                         childMove = new Point(i,j);
                         Board childBoard = new Board();
                         childBoard.copy(state);                       //childBoard = parentBoard
                         childBoard.updateBoard(childMove,'X');    //             + childMove
                         childBoard.setLastMove(childMove);
-                        bestState.copy(minimax(childBoard, depth+1, false, alpha, beta, maxDepth));
+                        bestState = minimax(childBoard, depth+1, false, alpha, beta, maxDepth);
                         value   = bestState.evaluate('X');
 
                         if (bestValue > value) returnBoard.copy(state);
@@ -123,7 +124,7 @@ public class Main{
                         bestValue = Math.max(bestValue, value);
                         alpha     = Math.max(alpha, bestValue);
                         if (beta <= alpha){
-                          break;
+                            break;
                         }
                     }
                 }
@@ -131,6 +132,7 @@ public class Main{
             return returnBoard;
         }
         else{
+            System.out.println("O");
             int bestValue = 999999999, value;
             Board returnBoard = new Board(), bestState = new Board();
             boolean getOut = false;
@@ -145,15 +147,15 @@ public class Main{
                         childBoard.updateBoard(childMove,'O');    //             + childMove
                         childBoard.setLastMove(childMove);
 
-                        bestState.copy(minimax(childBoard, depth+1, true, alpha, beta, maxDepth));
+                        bestState = minimax(childBoard, depth+1, true, alpha, beta, maxDepth);
                         value   = bestState.evaluate('O');
 
                         if (bestValue < value) returnBoard.copy(state);
                         else{ returnBoard.copy(bestState);}
                         bestValue = Math.min(bestValue, value);
-                        beta      = Math.max(beta, bestValue);
+                        beta      = Math.min(beta, bestValue);
                         if (beta <= alpha){
-                          break;
+                            break;
                         }
                     }
                 }
