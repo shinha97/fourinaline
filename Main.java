@@ -92,4 +92,68 @@ public class Main{
         else System.out.println("Opponent Wins!");
 
     }
+	/**======================
+     *    A L G O R I T H M
+     * ======================*/
+
+    public static Board minimax(Board state, int depth, boolean isMaxPlayer, int alpha, int beta, int maxDepth){
+        if ((depth == maxDepth) || (state.getTerminalState() )){
+            return state;
+        }
+
+
+        Point childMove = new Point();
+        if (isMaxPlayer){
+            int bestValue = -999999999, value;
+            Board returnBoard = new Board(), bestState;
+            //check children
+            for (int i = 0; i < 8; i++){
+                for (int j = 0; j < 8; j++){
+                    if (state.getCell(i,j) == '_'){//if the potential child is an empty tile..
+
+                        childMove = new Point(i,j);
+                        Board childBoard = state;                       //childBoard = parentBoard
+                        childBoard.updateBoard(childMove,'X');    //             + childMove
+
+
+                        bestState = minimax(childBoard, depth+1, false, alpha, beta, maxDepth);
+                        value   = bestState.evaluate('X');
+
+                        if (bestValue > value) returnBoard = state;
+                        else{ returnBoard = bestState;}
+                        bestValue = Math.max(bestValue, value);
+                        alpha     = Math.max(alpha, bestValue);
+                        if (beta <= alpha) break;
+                    }
+                }
+            }
+            return returnBoard;
+        }
+        else{
+            int bestValue = 999999999, value;
+            Board returnBoard = new Board(), bestState;
+            //check children
+            for (int i = 0; i < 8; i++){
+                for (int j = 0; j < 8; j++){
+                    if (state.getCell(i,j) == '_'){//if the potential child is an empty tile..
+
+                        childMove = new Point(i,j);
+                        Board childBoard = state;                       //childBoard = parentBoard
+                        childBoard.updateBoard(childMove,'O');    //             + childMove
+
+
+                        bestState = minimax(childBoard, depth+1, true, alpha, beta, maxDepth);
+                        value   = bestState.evaluate('O');
+
+                        if (bestValue < value) returnBoard = state;
+                        else{ returnBoard = bestState;}
+                        bestValue = Math.min(bestValue, value);
+                        beta      = Math.max(beta, bestValue);
+                        if (beta <= alpha) break;
+                    }
+                }
+            }
+            return returnBoard;
+        }
+    }
 }
