@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.awt.Point;
 
 public class Board{
-    private static char [][] board;
+    private char [][] board;
     private int movesLeft;
     private Point lastMove;
 
@@ -18,6 +18,7 @@ public class Board{
     public Board(){
         board = new char[8][8];
         movesLeft = 64;
+        lastMove = new Point(-1,-1);
 
         //populate empty board
          for(int i=0;i<board.length;i++){
@@ -59,7 +60,11 @@ public class Board{
     //     movesLeft = copy.getMovesLeft();
     // }
     // copy constructor
-    Board(Board copy) {
+    public void setLastMove(Point p){
+      lastMove.x = p.x;
+      lastMove.y = p.y;
+    }
+    public void copy(Board copy) {
         board = new char[8][8];
 
         //populate empty board
@@ -251,7 +256,24 @@ public class Board{
         }
 
     }
-
+    public void print(){
+      System.out.println("test");
+      for(int row=0;row<9;row++){//rowumn
+          for(int col=0;col<9;col++){//col
+              if(row-1 >= 0 && col-1 >= 0)//if not (1st column and 1st row), print board cells
+                  System.out.print(board[row-1][col-1]+"  ");
+              else{//1st row or 1st col
+                  if(row==0 && col==0){//cell[0][0]
+                      System.out.print("   ");
+                  }else if(row==0){//first row, prints numbers
+                      System.out.print(col+"  ");
+                  }else if(col==0){//first column prints letters
+                      System.out.print((char)('@'+row)+"  ");
+                  }else;
+              }
+          }System.out.println();
+      }System.out.println();
+    }
     public void printBoard(int startPlayer,List<String> moveRecord){
         for(int row=0;row<9;row++){//rowumn
             for(int col=0;col<9;col++){//col
@@ -284,6 +306,6 @@ public class Board{
             System.out.print(((i/2)+1)+". ");
           }
           System.out.print(moveRecord.get(i)+" ");
-        }
+        }System.out.println();
     }
 }
