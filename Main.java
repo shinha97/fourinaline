@@ -25,7 +25,7 @@ public class Main{
         List<String> moveRecord = new ArrayList<String>();
         Scanner input = new Scanner(System.in);
         Board b = new Board();
-        b.printBoard(startPlayer);
+        b.printBoard(startPlayer, moveRecord);
 
 
         while(!b.getTerminalState()){
@@ -46,7 +46,19 @@ public class Main{
                 moveRecord.add(move);
                 b.printBoard(startPlayer,moveRecord);
                 //TODO: Find response move, within the given time and plot on the board
-                //System.out.println("Valid move!");
+                Point validMove = new Point(((int)move.charAt(0)-97),(move.charAt(1)-'0'-1));
+                if (startPlayer == 0){
+                    MinMaxNode AI       = new MinMaxNode(-9999,9999,validMove,true,b);
+                    MinMaxNode nextMove = AI.minValue(b, 0, -9999,9999);
+                    //MinMaxNode nextMove = MinMaxNode.minimax(0,true,-9999,9999,AI);
+                    System.out.println("Opponent will move to pos: " + nextMove.getCurrPosition());
+
+                }
+                else{
+                    MinMaxNode AI = new MinMaxNode(-9999,9999,validMove,false,b);
+                }
+
+
                 if (startPlayer == 0){
                     startPlayer =1;
                     c = 'X';
