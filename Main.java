@@ -2,6 +2,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Random;
 
 public class Main{
     public static void main(String[] args){
@@ -31,23 +32,33 @@ public class Main{
         String move;
         long startTime = System.currentTimeMillis(),totalTime,timeLimit = time*1000;
         b.printBoard(startPlayer, moveRecord);
+        Point p = new Point();
         while(!b.getTerminalState()){
             char c;
             if (currentPlayer == 0){
-                System.out.print("\nPlayer's move is: ");
+                System.out.println("\nPlayer's move");
                 c = 'X';
-                Board tempBoard = new Board(), currentBoard = new Board();
-                for(int maxDepth=1;maxDepth<=2 && (System.currentTimeMillis()-startTime)<timeLimit;maxDepth++){
-                    startTime = System.nanoTime();
-                    //call minimax
-                    tempBoard = minimax(b,0,true,-999999999,999999999,maxDepth);
-                    currentBoard.copy(tempBoard);
-                    totalTime = System.currentTimeMillis()-startTime;
+
+                //if empty board, choose random cell in 4x4 box in middle
+                if(b.isEmpty() || moveRecord.size()<2){
+                    Random r = new Random();
+                    p = new Point(r.nextInt(4)+2,r.nextInt(4)+2);
+                }else{
+                    Point tempP = new Point(p.x,p.y);
+                    for(int maxDepth=1;maxDepth<=5 && (System.currentTimeMillis()-startTime)<timeLimit;maxDepth++){
+                        startTime = System.nanoTime();
+                        //call minimax
+
+                        tempP = minimax(tempP,b,0,true,-999999999,999999999,maxDepth,System.currentTimeMillis()-startTime);
+                        p.x = tempP.x;
+                        p.y = tempP.y;
+                        totalTime = System.currentTimeMillis()-startTime;
+                    }
+                    //p = minimax(p,b,0,true,-999999999,999999999,5);
                 }
-                System.out.println(currentBoard.getLastMove().x+" "+currentBoard.getLastMove().y);
-                moveRecord.add(Character.toString((char)(currentBoard.getLastMove().x+97))+
-                                    Character.toString((char)(currentBoard.getLastMove().x+97)));
-                b.copy(currentBoard);
+
+                b.updateBoard(p,'X');
+                moveRecord.add(Character.toString((char)(p.x+97))+Integer.toString((char)(p.y+1)));
                 b.printBoard(startPlayer,moveRecord);
                 //test ai player with keyboard
                 // do{
@@ -93,74 +104,110 @@ public class Main{
      *    A L G O R I T H M
      * ======================*/
 
-    private static Board minimax(Board state, int depth, boolean isMaxPlayer, int alpha, int beta, int maxDepth){
-        Scanner kb = new Scanner(System.in);
-        if ((depth == maxDepth) || (state.getTerminalState() )){
-            return state;
+    private static Point minimax(Point currentMove,Board currentState, int depth, boolean isMaxPlayer, int alpha, int beta, int maxDepth,long time){
+        // currentState.print();
+        // System.out.println(alpha+" "+beta);
+        // Scanner kb = new Scanner(System.in);
+        //if maxdepth reached or board is full or in a win currentState
+        Random r = new Random();
+        if ((depth == maxDepth) || (currentState.getTerminalState() )){
+            return currentMove;
         }
 
         Point childMove = new Point();
         if (isMaxPlayer){
-            System.out.println("X");
             int bestValue = -999999999, value;
-            Board returnBoard = new Board(), bestState = new Board();
-            boolean getOut = false;
+            Board returnBoard = new Board(), bestState = new Board(), childBoard = new Board(currentState);
+            //initialize to random move near last move if cant find any better move
+            Board tempBoard;
+            Point nextMove;
+            int newx,newy;
+                tempBoard = new Board(currentState);
+                do{
+                    if(r.nextInt(2)==0){//add or subtract x
+                        newx = r.nextInt(3);
+                    }else{
+                      newx = -r.nextInt(3);
+                    }
+                    if(r.nextInt(2)==0){//add or subtract y
+                      newy = r.nextInt(3);
+                    }else{
+                      newy = -r.nextInt(3);
+                    }
+                    nextMove = new Point(currentMove.x+newx,currentMove.y+newy);
+                }while(!tempBoard.tryMoveAI(nextMove,'X'));
             //check children
             for (int i = 0; i < 8; i++){
                 for (int j = 0; j < 8; j++){
-                    if (state.getCell(i,j) == '_'){//if the potential child is an empty tile..
-                        System.out.println(i+" "+j);
-                        // System.out.println("X turn");
+                    if (currentState.getCell(i,j) == '_'){//create childnode
                         childMove = new Point(i,j);
-                        Board childBoard = new Board();
-                        childBoard.copy(state);                       //childBoard = parentBoard
+                        childBoard = new Board(currentState);                     //childBoard = parentBoard
                         childBoard.updateBoard(childMove,'X');    //             + childMove
-                        childBoard.setLastMove(childMove);
-                        bestState = minimax(childBoard, depth+1, false, alpha, beta, maxDepth);
-                        value   = bestState.evaluate('X');
+                        if(childBoard.evaluate('X') > currentState.evaluate('X')){
+                            long newTime = System.currentTimeMillis()-time;
+                            nextMove = minimax(childMove,childBoard, depth+1, false, alpha, beta, maxDepth,newTime);
+                            childBoard.updateBoard(nextMove,'O');
+                            childBoard.decrementMoveCount();
+                            bestValue = Math.max(bestValue,childBoard.evaluate('X'));
+                            alpha     = Math.max(alpha, bestValue);
 
-                        if (bestValue > value) returnBoard.copy(state);
-                        else{ returnBoard.copy(bestState);}
-                        bestValue = Math.max(bestValue, value);
-                        alpha     = Math.max(alpha, bestValue);
-                        if (beta <= alpha){
-                            break;
+                            if (beta <= alpha || newTime < 0){
+                                childBoard.incrementMoveCount();
+                                return nextMove;
+                            }
                         }
                     }
                 }
             }
-            return returnBoard;
+            childBoard.decrementMoveCount();
+            return nextMove;
         }
         else{
-            System.out.println("O");
-            int bestValue = 999999999, value;
-            Board returnBoard = new Board(), bestState = new Board();
-            boolean getOut = false;
-            //check children
-            for (int i = 0; i < 8; i++){
-                for (int j = 0; j < 8; j++){
-                    if (state.getCell(i,j) == '_'){//if the potential child is an empty tile..
-                        // System.out.println("O turn");
-                        childMove = new Point(i,j);
-                        Board childBoard = new Board();
-                        childBoard.copy(state);                      //childBoard = parentBoard
-                        childBoard.updateBoard(childMove,'O');    //             + childMove
-                        childBoard.setLastMove(childMove);
+          int bestValue = 999999999, value;
+          Board returnBoard = new Board(), bestState = new Board(), childBoard = new Board(currentState);;
+          //initialize to random move near last move if cant find any better move
+          Board tempBoard;
+          Point nextMove;
+          int newx,newy;
+            tempBoard = new Board(currentState);
+            do{
+              if(r.nextInt(2)==0){//add or subtract x
+                  newx = r.nextInt(3);
+              }else{
+                newx = -r.nextInt(3);
+              }
+              if(r.nextInt(2)==0){//add or subtract y
+                newy = r.nextInt(3);
+              }else{
+                newy = -r.nextInt(3);
+              }
+              nextMove = new Point(currentMove.x+newx,currentMove.y+newy);
+            }while(!tempBoard.tryMoveAI(nextMove,'O'));
+          //check children
+          for (int i = 0; i < 8; i++){
+              for (int j = 0; j < 8; j++){
+                  if (currentState.getCell(i,j) == '_'){//create childnode
+                      childMove = new Point(i,j);
+                      childBoard = new Board(currentState);                     //childBoard = parentBoard
+                      childBoard.updateBoard(childMove,'O');    //             + childMove
+                      if(childBoard.evaluate('O') > currentState.evaluate('O')){
+                          long newTime = System.currentTimeMillis()-time;
+                          nextMove = minimax(childMove,childBoard, depth+1, true, alpha, beta, maxDepth,newTime);
+                          childBoard.updateBoard(nextMove,'X');
+                          childBoard.decrementMoveCount();
+                          bestValue = Math.min(bestValue,childBoard.evaluate('O'));
+                          beta     = Math.min(beta, bestValue);
 
-                        bestState = minimax(childBoard, depth+1, true, alpha, beta, maxDepth);
-                        value   = bestState.evaluate('O');
-
-                        if (bestValue < value) returnBoard.copy(state);
-                        else{ returnBoard.copy(bestState);}
-                        bestValue = Math.min(bestValue, value);
-                        beta      = Math.min(beta, bestValue);
-                        if (beta <= alpha){
-                            break;
-                        }
-                    }
-                }
-            }
-            return returnBoard;
+                          if (beta <= alpha){
+                            childBoard.incrementMoveCount();
+                              return nextMove;
+                          }
+                      }
+                  }
+              }
+          }
+          childBoard.decrementMoveCount();
+          return nextMove;
         }
     }
 }

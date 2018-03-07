@@ -6,7 +6,7 @@ import java.awt.Point;
 public class Board{
     private char [][] board;
     private int movesLeft;
-    private Point lastMove;
+    private char turn;
 
     //testing
     // public static void main(String[]args){
@@ -18,7 +18,6 @@ public class Board{
     public Board(){
         board = new char[8][8];
         movesLeft = 64;
-        lastMove = new Point(-1,-1);
 
         //populate empty board
          for(int i=0;i<board.length;i++){
@@ -47,6 +46,23 @@ public class Board{
         // 					   {'_','_','_','_','_','_','_','_'},
         // 					   {'_','_','_','_','_','_','_','_'}};
     }
+    public Board(Board b){
+      board = new char[8][8];
+      movesLeft = b.getMovesLeft();
+
+      //populate empty board
+       for(int i=0;i<board.length;i++){
+           for(int j=0;j<board[i].length;j++){
+               board[i][j] = b.getCell(i,j);
+           }
+       }
+    }
+    public void setTurn(char c){
+      turn = c;
+    }
+    public char getTurn(){
+      return turn;
+    }
     // public Board(char[][] b){
     // public Board(Board copy){
     //     board = new char[8][8];
@@ -60,10 +76,6 @@ public class Board{
     //     movesLeft = copy.getMovesLeft();
     // }
     // copy constructor
-    public void setLastMove(Point p){
-      lastMove.x = p.x;
-      lastMove.y = p.y;
-    }
     public void copy(Board copy) {
         board = new char[8][8];
 
@@ -78,8 +90,20 @@ public class Board{
     public int getMovesLeft(){
       return movesLeft;
     }
-    public Point getLastMove(){
-      return lastMove;
+    public void decrementMoveCount(){
+      movesLeft--;
+    }
+    public void incrementMoveCount(){
+      movesLeft++;
+    }
+    public boolean isEmpty(){
+      for(int i=0;i<board.length;i++){
+        for(int j=0;j<board[i].length;j++){
+          if(board[i][j]!='_')
+            return false;
+        }
+      }
+      return true;
     }
     public boolean getTerminalState(){
         if(checkFours('X') || checkFours('O') || movesLeft == 0)
@@ -103,7 +127,12 @@ public class Board{
         int enemyThrees = checkThrees(enemy) * 10000;
         int enemyTwos = checkTwos(enemy) * 10;
 
-        return threes + twos - enemyThrees - enemyTwos;
+        int turnScore = 0;
+        // if(turn!=c){
+        //   turnScore = 1;
+        // }
+
+        return threes + twos + turnScore - enemyThrees - enemyTwos;
     }
     private int checkTwos(char c){
         int score = 0;
@@ -235,6 +264,7 @@ public class Board{
 
     public void updateBoard(Point newPosition, char value){
         board[newPosition.x][newPosition.y] = value;
+        turn = value;
     }
 
     public boolean tryMove(String move, char c){
@@ -243,6 +273,7 @@ public class Board{
                 //If valid move, update the board
                 Point validMove = new Point(((int)move.charAt(0)-97),(move.charAt(1)-'0'-1));
                 updateBoard(validMove, c);
+                turn = c;
                 return true;
             }
             else{
@@ -254,7 +285,22 @@ public class Board{
             System.out.println("Error: Move out of bounds. Try again. " + (int)move.charAt(0) + " " + move.charAt(1));
             return false;
         }
-
+    }
+    public boolean tryMoveAI(Point p, char c){
+        if ((p.x>=0 && p.x<8) && (p.y>=0 && p.y<8)){//if the row/col is valid
+            if (getCell(p.x,p.y) == '_'){//the move is an empty tile
+                //If valid move, update the board
+                updateBoard(p, c);
+                turn = c;
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
     }
     public void print(){
       System.out.println("test");
