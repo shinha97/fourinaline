@@ -8,7 +8,10 @@ public class Main{
     public static void main(String[] args){
         //=========Set variables Area==========
         Scanner input = new Scanner(System.in);
-
+        // Board b = new Board();
+        // b.print();
+        // System.out.println(b.evaluate('X'));
+        // System.out.println(b.evaluate('O'));
         System.out.print("Enter the amount of time (in sec) allowed for generating a move: ");
 
         int time = input.nextInt();
@@ -36,6 +39,7 @@ public class Main{
         while(!b.getTerminalState()){
             char c;
             if (currentPlayer == 0){
+                b.setTurn(0);
                 System.out.println("\nPlayer's move");
                 c = 'X';
 
@@ -75,6 +79,7 @@ public class Main{
                 //     }
                 // }while(true);
             }else {//startplayer = 1
+              b.setTurn(1);
                 do{
                     System.out.print("\nOpponent's move is: ");
                     c = 'O';
@@ -146,25 +151,22 @@ public class Main{
                         if(childBoard.evaluate('X') > currentState.evaluate('X')){
                             long newTime = System.currentTimeMillis()-time;
                             nextMove = minimax(childMove,childBoard, depth+1, false, alpha, beta, maxDepth,newTime);
-                            childBoard.updateBoard(nextMove,'O');
-                            childBoard.decrementMoveCount();
+                            childBoard.updateBoard(nextMove,'X');
                             bestValue = Math.max(bestValue,childBoard.evaluate('X'));
                             alpha     = Math.max(alpha, bestValue);
 
                             if (beta <= alpha || newTime < 0){
-                                childBoard.incrementMoveCount();
                                 return nextMove;
                             }
                         }
                     }
                 }
             }
-            childBoard.decrementMoveCount();
             return nextMove;
         }
         else{
           int bestValue = 999999999, value;
-          Board returnBoard = new Board(), bestState = new Board(), childBoard = new Board(currentState);;
+          Board returnBoard = new Board(), bestState = new Board(), childBoard = new Board(currentState);
           //initialize to random move near last move if cant find any better move
           Board tempBoard;
           Point nextMove;
@@ -193,20 +195,17 @@ public class Main{
                       if(childBoard.evaluate('O') > currentState.evaluate('O')){
                           long newTime = System.currentTimeMillis()-time;
                           nextMove = minimax(childMove,childBoard, depth+1, true, alpha, beta, maxDepth,newTime);
-                          childBoard.updateBoard(nextMove,'X');
-                          childBoard.decrementMoveCount();
+                          childBoard.updateBoard(nextMove,'O');
                           bestValue = Math.min(bestValue,childBoard.evaluate('O'));
                           beta     = Math.min(beta, bestValue);
 
                           if (beta <= alpha){
-                            childBoard.incrementMoveCount();
                               return nextMove;
                           }
                       }
                   }
               }
           }
-          childBoard.decrementMoveCount();
           return nextMove;
         }
     }

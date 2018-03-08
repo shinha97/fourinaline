@@ -6,7 +6,7 @@ import java.awt.Point;
 public class Board{
     private char [][] board;
     private int movesLeft;
-    private char turn;
+    private int turn;
 
     //testing
     // public static void main(String[]args){
@@ -37,10 +37,10 @@ public class Board{
         // }
 
         //visual test board
-        // board=new char[][]{ {'O','O','O','X','_','X','_','X'},
+        // board=new char[][]{ {'_','_','_','_','_','_','_','_'},
         //                     {'_','_','_','_','_','_','_','_'},
-        // 					   {'_','_','_','_','_','_','_','_'},
-        // 					   {'_','_','_','_','_','_','_','_'},
+        // 					          {'_','O','_','_','X','_','_','_'},
+        // 					          {'_','O','_','_','X','_','_','_'},
         // 					   {'_','_','_','_','_','_','_','_'},
         // 					   {'_','_','_','_','_','_','_','_'},
         // 					   {'_','_','_','_','_','_','_','_'},
@@ -56,12 +56,13 @@ public class Board{
                board[i][j] = b.getCell(i,j);
            }
        }
+       turn = b.getTurn();
     }
-    public void setTurn(char c){
-      turn = c;
-    }
-    public char getTurn(){
+    public int getTurn(){
       return turn;
+    }
+    public void setTurn(int c){
+      turn = c;
     }
     // public Board(char[][] b){
     // public Board(Board copy){
@@ -86,15 +87,13 @@ public class Board{
               }
         }
         movesLeft = copy.getMovesLeft();
+        turn = copy.getTurn();
     }
     public int getMovesLeft(){
       return movesLeft;
     }
-    public void decrementMoveCount(){
+    private void decrementMoveCount(){
       movesLeft--;
-    }
-    public void incrementMoveCount(){
-      movesLeft++;
     }
     public boolean isEmpty(){
       for(int i=0;i<board.length;i++){
@@ -119,22 +118,26 @@ public class Board{
         else enemy = 'X';
 
         boolean fours = checkFours(c);
-        if(fours) return 10000000;
+        if(fours) return 100000000;
         boolean enemyFours = checkFours(enemy);
-        if(enemyFours) return -10000000;
-        int threes = checkThrees(c) * 10000;
+        if(enemyFours) return -100000000;
+        int threes = checkThrees(c) * 100000;
         int twos = checkTwos(c) * 10;
-        int enemyThrees = checkThrees(enemy) * 10000;
+        int enemyThrees = checkThrees(enemy) * 100000;
         int enemyTwos = checkTwos(enemy) * 10;
-
+        // System.out.println(threes+" "+twos+" "+enemyThrees+" "+enemyTwos);
         int turnScore = 0;
-        // if(turn!=c){
-        //   turnScore = 1;
-        // }
+        if(turn==0 && c=='X'){
+          turnScore = -1;
+        }
+        if(turn==1 && c=='O'){
+          turnScore = -1;
+        }
 
-        return threes + twos + turnScore - enemyThrees - enemyTwos;
+        return threes + twos - enemyThrees - enemyTwos + turnScore;
     }
     private int checkTwos(char c){
+      // System.out.println("Turn "+c);
         int score = 0;
         //check row
         for(int col=0;col<5;col++){
@@ -145,7 +148,15 @@ public class Board{
                      board[row][col+1]=='_' && board[row][col+3]=='_') ||
                     (board[row][col]==c && board[row][col]==board[row][col+3] &&
                      board[row][col+1]=='_' && board[row][col+2]=='_') ){
-                    score++;
+                    if(col>1 && board[row][col-2]=='_' && board[row][col-1]=='_') score+=2;
+                    else score++;
+                      // System.out.println(board[row][col]+" "+board[row][col+1]+" "+board[row][col+2]);
+                }
+                if(col<4){
+                  if( (board[row][col+2]==c && board[row][col+2]==board[row][col+3] &&
+                       board[row][col]=='_' && board[row][col+1]=='_') ){
+                         score++;
+                    }
                 }
                 if(col==4){
                     if( (board[row][col+1]==c && board[row][col+1]==board[row][col+2] &&
@@ -154,7 +165,8 @@ public class Board{
                          board[row][col]=='_' && board[row][col+2]=='_') ||
                         (board[row][col+2]==c && board[row][col+2]==board[row][col+3] &&
                          board[row][col]=='_' && board[row][col+1]=='_') ){
-                          score++;
+                           score++;
+                          // System.out.println(board[row][col]+" "+board[row][col+1]+" "+board[row][col+2]+" "+board[row][col+3]);
                     }
                 }
             }
@@ -168,7 +180,18 @@ public class Board{
                      board[row+1][col]=='_' && board[row+3][col]=='_') ||
                     (board[row][col]==c && board[row][col]==board[row+3][col] &&
                      board[row+1][col]=='_' && board[row+2][col]=='_') ){
-                    score++;
+                       // System.out.println(board[row][col]+" "+board[row+1][col]+" "+board[row+2][col]+" "+board[row+3][col]);
+                       if(row>1 && board[row-2][col]=='_' && board[row-1][col]=='_'){
+                         // System.out.println("YES "+board[row-2][col]+" "+board[row-1][col]+" "+board[row][col]+" "+board[row+1][col]+" "+board[row+2][col]+" "+board[row+3][col]);
+                         score+=2;
+                       }
+                       else score++;
+                }
+                if(row<4){
+                  if( (board[row+2][col]==c && board[row+2][col]==board[row+3][col] &&
+                       board[row][col]=='_' && board[row+1][col]=='_') ){
+                         score++;
+                    }
                 }
                 if(row==4){
                     if( (board[row+1][col]==c && board[row+1][col]==board[row+2][col] &&
@@ -177,7 +200,7 @@ public class Board{
                          board[row][col]=='_' && board[row][col]=='_') ||
                         (board[row+2][col]==c && board[row+2][col]==board[row+3][col] &&
                          board[row][col]=='_' && board[row+1][col]=='_') ){
-                          score++;
+                           score++;
                     }
                 }
             }
@@ -190,18 +213,21 @@ public class Board{
         //check rows
         for(int col=0;col<5;col++){
             for(int row=0;row<board.length;row++){
+
                 if( (board[row][col]==c && board[row][col]==board[row][col+1] &&
                      board[row][col+1]==board[row][col+2] && board[row][col+3]=='_') ||
                     (board[row][col]==c && board[row][col]==board[row][col+1] &&
                      board[row][col+1]==board[row][col+3] && board[row][col+2]=='_') ||
                     (board[row][col]==c && board[row][col]==board[row][col+2] &&
                      board[row][col+2]==board[row][col+3] && board[row][col+1]=='_') ){
-                    score++;
+                         // System.out.println(board[row][col]+" "+board[row][col+1]+" "+board[row][col+2]+" "+board[row][col+3]);
+                    if(col>0 && board[row][col-1]=='_') score+=2;
+                    else score++;
                 }
                 if(col==4){
                     if(board[row][col+1]==c && board[row][col+1]==board[row][col+2] &&
                        board[row][col+2]==board[row][col+3] && board[row][col]=='_'){
-                        score++;
+                         score++;
                     }
                 }
             }
@@ -215,12 +241,13 @@ public class Board{
                      board[row+1][col]==board[row+3][col] && board[row+2][col]=='_') ||
                     (board[row][col]==c && board[row][col]==board[row+2][col] &&
                      board[row+2][col]==board[row+3][col] && board[row+1][col]=='_') ){
-                    score++;
+                       if(row>0 && board[row-1][col]=='_') score+=2;
+                       else score++;
                 }
                 if(row==4){
                     if(board[row+1][col]==c && board[row+1][col]==board[row+2][col] &&
                        board[row+2][col]==board[row+3][col] && board[row][col]=='_'){
-                        score++;
+                         score++;
                     }
                 }
             }
@@ -264,7 +291,9 @@ public class Board{
 
     public void updateBoard(Point newPosition, char value){
         board[newPosition.x][newPosition.y] = value;
-        turn = value;
+        decrementMoveCount();
+        if(value=='X') turn = 0;
+        else turn = 1;
     }
 
     public boolean tryMove(String move, char c){
@@ -273,7 +302,6 @@ public class Board{
                 //If valid move, update the board
                 Point validMove = new Point(((int)move.charAt(0)-97),(move.charAt(1)-'0'-1));
                 updateBoard(validMove, c);
-                turn = c;
                 return true;
             }
             else{
@@ -291,7 +319,6 @@ public class Board{
             if (getCell(p.x,p.y) == '_'){//the move is an empty tile
                 //If valid move, update the board
                 updateBoard(p, c);
-                turn = c;
                 return true;
             }
             else{
